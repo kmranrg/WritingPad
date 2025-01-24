@@ -128,6 +128,7 @@ function saveFile() {
  * Show or hide developer info popover
  */
 function showDeveloperInfo() {
+  // Toggle the popover display
   if (devPopover.style.display === "block") {
     devPopover.style.display = "none";
   } else {
@@ -135,12 +136,16 @@ function showDeveloperInfo() {
   }
 }
 
-// If user clicks anywhere outside the popover, close it (optional)
+// Close the popover if clicking outside (optional)
 document.addEventListener("click", (e) => {
+  const target = e.target;
+
+  // Ensure clicks on the button or icon inside it still toggle properly
   if (
-    e.target !== developerBtn &&
-    e.target !== devPopover &&
-    !devPopover.contains(e.target)
+    target !== developerBtn &&
+    target !== devPopover &&
+    !devPopover.contains(target) &&
+    !developerBtn.contains(target) // Ensure clicks on button content count
   ) {
     devPopover.style.display = "none";
   }

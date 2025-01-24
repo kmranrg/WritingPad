@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Basic SEO Meta Tags -->
+  <meta name="author" content="Kumar Anurag">
+  <meta name="keywords" content="WritingPad, kmranrg, notepad, Kumar Anurag, web text editor, notebook theme">
+  <meta name="description" content="WritingPad - A simple notebook-themed text editor by Kumar Anurag.">
+
+  <title>WritingPad</title>
+  
+  <!-- Styles & Favicon -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="logo.png" />
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header>
+    <img src="icons/clipboard-regular-white.svg" alt="logo" class="header-icon" />
+    <span>WritingPad</span>
+  </header>
+
+  <!-- TOP TOOLBAR -->
+  <div class="toolbar">
+
+    <!-- Filename group (icon + input) -->
+    <div class="filename-group">
+      <img src="icons/file-signature-solid.svg" alt="File Icon" />
+      <input
+        type="text"
+        id="filenameInput"
+        class="filename-input"
+        placeholder="untitled.txt"
+      />
+    </div>
+
+    <!-- File Action Buttons -->
+    <button type="button" onclick="newFile()">
+      <img src="icons/plus-solid.svg" alt="New" />
+      New
+    </button>
+    <button type="button" onclick="openFile()">
+      <img src="icons/folder-open-solid.svg" alt="Open" />
+      Open
+    </button>
+    <button type="button" onclick="saveFile()">
+      <img src="icons/floppy-disk-solid.svg" alt="Save" />
+      Save
+    </button>
+
+    <!-- Developer Info (right side) -->
+    <div class="developer-info">
+      <button
+        id="developerBtn"
+        class="icon-button"
+        title="Developer Info"
+        onclick="showDeveloperInfo()"
+      >
+        <img src="icons/info-solid.svg" alt="Info" />
+      </button>
+      <div id="devPopover" class="dev-popover">
+        Designed &amp; Developed by
+        <a href="https://kmranrg.com" target="_blank">Kumar Anurag</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden file input for opening local files -->
+  <input
+    type="file"
+    id="fileInput"
+    accept=".txt"
+    style="display: none;"
+    onchange="handleFileOpen(event)"
+  />
+
+  <!-- Main Editor Container -->
+  <div class="editor-container">
+    <textarea id="editor" placeholder="Start typing here..."></textarea>
+  </div>
+
+  <!-- Script -->
+  <script src="script.js"></script>
+</body>
+</html>

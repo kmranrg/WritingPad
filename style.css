@@ -1,0 +1,227 @@
+/* --------------
+   GENERAL RESET
+   -------------- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* --------------
+     BODY
+     -------------- */
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 500;
+    background: #f3f3f3;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --------------
+     HEADER
+     -------------- */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #3f51b5;
+    color: white;
+    padding: 1rem;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+/* Let the icon be a reasonable size */
+.header-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* --------------
+     TOOLBAR
+     -------------- */
+.toolbar {
+    background: #e8eaf6;
+    display: flex;
+    flex-wrap: wrap;
+    /* Wrap for small screens */
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    justify-content: flex-start;
+}
+
+/* --------------
+     FILENAME GROUP
+     --------------
+     Holds an icon + input with a shared border.
+  */
+.filename-group {
+    display: inline-flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.4rem 0.6rem;
+    /* some horizontal padding around icon & input */
+}
+
+/* The file icon inside the filename group */
+.filename-group img {
+    width: 15px;
+    height: 15px;
+    margin-right: 0.5rem;
+    /* spacing between icon and input */
+}
+
+/* Filename input styling: no separate border, so it blends with group */
+.filename-input {
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 1rem;
+    height: 24px;
+    min-width: 100px;
+    /* allow some space for typed text */
+}
+
+/* --------------
+     TOOLBAR BUTTONS
+     -------------- */
+.toolbar button {
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    /* flex row so icon + text align well */
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.toolbar button img {
+    width: 15px;
+    height: 15px;
+}
+
+.toolbar button:hover {
+    background: #f0f0f0;
+}
+
+/* Developer info container on the right side */
+.developer-info {
+    margin-left: auto;
+    /* pushes this to the extreme right */
+    position: relative;
+    /* for the popover positioning */
+}
+
+/* The small icon button for dev info (just an icon) */
+.icon-button {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    background: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-button img {
+    width: 16px;
+    height: 16px;
+}
+
+/* The popover (hidden by default) */
+.dev-popover {
+    display: none;
+    position: absolute;
+    top: 110%;
+    /* place it just below the icon */
+    right: 0;
+    /* align to the right edge */
+    background: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.75rem;
+    width: 220px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+}
+
+.dev-popover a {
+    color: #3f51b5;
+    text-decoration: none;
+}
+
+.dev-popover a:hover {
+    text-decoration: underline;
+}
+
+/* --------------
+     EDITOR CONTAINER
+     -------------- */
+.editor-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    overflow: auto;
+}
+
+/* --------------
+     NOTEBOOK THEME TEXTAREA
+     --------------
+     Tweak line-height / gradient spacing to align text with lines.
+  */
+#editor {
+    flex: 1;
+    width: 100%;
+    font-family: "Fira Mono", monospace; /* new monospaced family */
+    font-weight: 500;                   /* gives a thicker appearance */
+    font-size: 16px;
+    line-height: 24px;
+    padding: 8px 10px 8px 60px;
+    border: none;
+    outline: none;
+    resize: none;
+    padding-top: 2px;
+
+    background:
+        /* vertical margin line at 50px, tinted red (1px wide) */
+        linear-gradient(to bottom, rgba(255, 0, 0, 0.3) 0%, rgba(255, 0, 0, 0.3) 100%) 50px 0 / 1px 100% no-repeat,
+        repeating-linear-gradient(white 0px,
+            white 23px,
+            #d7d7d7 24px,
+            white 24px);
+}
+
+#editor:focus {
+    background-color: #fffdfb;
+}
+
+/* --------------
+     RESPONSIVE
+     -------------- */
+@media (max-width: 600px) {
+    .toolbar {
+        justify-content: center;
+    }
+
+    .developer-info {
+        margin-left: 0;
+        /* let it flow with the rest in small screens */
+    }
+}

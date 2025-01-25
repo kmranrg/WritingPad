@@ -178,7 +178,6 @@ header {
     display: flex;
     flex-direction: column;
     padding: 1rem;
-    overflow: auto;
 }
 
 /* --------------
@@ -193,10 +192,11 @@ header {
     font-weight: 500;                   /* gives a thicker appearance */
     font-size: 16px;
     line-height: 24px;
+    overflow: auto;
+    resize: none;
     padding: 8px 10px 8px 60px;
     border: none;
     outline: none;
-    resize: none;
     padding-top: 2px;
 
     background:
@@ -206,6 +206,8 @@ header {
             white 23px,
             #d7d7d7 24px,
             white 24px);
+
+    background-attachment: local, local;
 }
 
 #editor:focus {

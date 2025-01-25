@@ -4,7 +4,7 @@
     "start_url": "/WritingPad/index.html",
     "display": "standalone",
     "background_color": "#ffffff",
-    "theme_color": "#3f51b5",
+    "theme_color": "#e8eaf6",
     "icons": [
       {
         "src": "icons/logo-192x192.png",

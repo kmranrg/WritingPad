@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wp-cache-v1';
+const CACHE_NAME = 'writingpad-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',

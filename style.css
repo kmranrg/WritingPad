@@ -212,20 +212,6 @@ header {
     background-color: #fffdfb;
 }
 
-/* --------------
-     RESPONSIVE
-     -------------- */
-@media (max-width: 600px) {
-    .toolbar {
-        justify-content: center;
-    }
-
-    .developer-info {
-        margin-left: 0;
-        /* let it flow with the rest in small screens */
-    }
-}
-
 /* Footer Message Styling */
 .footer-message {
     display: none; /* Hidden by default */
@@ -266,4 +252,42 @@ header {
     border-radius: 50%; /* Curves the line */
     transform: scaleX(0.9); /* Make the curve longer horizontally */
   }
+
+  /* Flickering tubelight effect for the name link */
+.footer-message a {
+    color: white;
+    text-decoration: none;
+    position: relative;
+    animation: flicker 1s ease-in-out forwards; /* Add flickering animation */
+  }
   
+  /* Keyframes for flickering effect */
+  @keyframes flicker {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    20% { opacity: 0; }
+    30% { opacity: 1; }
+    40% { opacity: 0; }
+    50% { opacity: 1; }
+    60% { opacity: 0; }
+    70% { opacity: 1; }
+    100% { opacity: 1; }
+  }  
+  
+  /* --------------
+     RESPONSIVE
+     -------------- */
+@media (max-width: 600px) {
+    .toolbar {
+        justify-content: center;
+    }
+
+    .developer-info {
+        margin-left: 0;
+        /* let it flow with the rest in small screens */
+    }
+
+    .footer-message {
+        font-size: 0.9rem;
+    }
+}

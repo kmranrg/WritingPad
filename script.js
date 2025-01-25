@@ -150,3 +150,18 @@ document.addEventListener("click", (e) => {
     devPopover.style.display = "none";
   }
 });
+
+/**
+ * Show footer message for a few seconds when the developer button is clicked.
+ */
+function showDeveloperInfo() {
+  const footerMessage = document.getElementById("footerMessage");
+
+  // Show the footer message
+  footerMessage.classList.add("show");
+
+  // Automatically hide the footer after 5 seconds
+  setTimeout(() => {
+    footerMessage.classList.remove("show");
+  }, 5000);
+}

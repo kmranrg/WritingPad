@@ -1,7 +1,7 @@
 /* --------------
    GENERAL RESET
    -------------- */
-   * {
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -187,8 +187,10 @@ header {
 #editor {
     flex: 1;
     width: 100%;
-    font-family: "Fira Mono", monospace; /* new monospaced family */
-    font-weight: 500;                   /* gives a thicker appearance */
+    font-family: "Fira Mono", monospace;
+    /* new monospaced family */
+    font-weight: 500;
+    /* gives a thicker appearance */
     font-size: 16px;
     line-height: 24px;
     overflow: auto;
@@ -215,67 +217,109 @@ header {
 
 /* Footer Message Styling */
 .footer-message {
-    display: none; /* Hidden by default */
+    display: none;
+    /* Hidden by default */
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: #3f51b5; /* Same as header background */
+    background-color: #3f51b5;
+    /* Same as header background */
     color: white;
     text-align: center;
     padding: 0.5rem 0;
     font-size: 1rem;
     z-index: 1000;
     transition: transform 0.3s ease-in-out;
-    transform: translateY(100%); /* Slide in/out effect */
-  }
-  
-  .footer-message.show {
+    transform: translateY(100%);
+    /* Slide in/out effect */
+}
+
+.footer-message.show {
     display: block;
-    transform: translateY(0); /* Slide up to visible */
-  }
-  
-  /* Curvy underline for the name link */
-  .footer-message a {
+    transform: translateY(0);
+    /* Slide up to visible */
+}
+
+/* Curvy underline for the name link */
+.footer-message a {
     color: white;
-    text-decoration: none; /* Remove the default underline */
+    text-decoration: none;
+    /* Remove the default underline */
     position: relative;
-  }
-  
-  /* Add curvy underline using the ::after pseudo-element */
-  .footer-message a::after {
+}
+
+/* Add curvy underline using the ::after pseudo-element */
+.footer-message a::after {
     content: "";
     position: absolute;
-    bottom: -5px; /* Position the curve a little below the text */
+    bottom: -5px;
+    /* Position the curve a little below the text */
     left: 0;
     width: 100%;
     height: 4px;
-    background: white; /* White color for the underline */
-    border-radius: 50%; /* Curves the line */
-    transform: scaleX(0.9); /* Make the curve longer horizontally */
-  }
+    background: white;
+    /* White color for the underline */
+    border-radius: 50%;
+    /* Curves the line */
+    transform: scaleX(0.9);
+    /* Make the curve longer horizontally */
+}
 
-  /* Flickering tubelight effect for the name link */
+/* Flickering tubelight effect for the name link */
 .footer-message a {
     color: white;
     text-decoration: none;
     position: relative;
-    animation: flicker 1s ease-in-out forwards; /* Add flickering animation */
+    animation: flicker 1s ease-in-out forwards;
+    /* Add flickering animation */
+}
+
+/* Keyframes for flickering effect */
+@keyframes flicker {
+    0% {
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    20% {
+        opacity: 0;
+    }
+
+    30% {
+        opacity: 1;
+    }
+
+    40% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    60% {
+        opacity: 0;
+    }
+
+    70% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.drag-hover {
+    border: 3px dashed #3f51b5 !important;
+    outline: 3px dashed #3f51b5;
+    background-color: #fafafa; 
   }
-  
-  /* Keyframes for flickering effect */
-  @keyframes flicker {
-    0% { opacity: 0; }
-    10% { opacity: 1; }
-    20% { opacity: 0; }
-    30% { opacity: 1; }
-    40% { opacity: 0; }
-    50% { opacity: 1; }
-    60% { opacity: 0; }
-    70% { opacity: 1; }
-    100% { opacity: 1; }
-  }  
-  
-  /* --------------
+
+/* --------------
      RESPONSIVE
      -------------- */
 @media (max-width: 600px) {
@@ -284,11 +328,15 @@ header {
     }
 
     .filename-group {
-        order: 1;        /* appear first in mobile layout */
-        width: 100%;     /* take full row width */
+        order: 1;
+        /* appear first in mobile layout */
+        width: 100%;
+        /* take full row width */
         display: flex;
-        justify-content: center; /* center horizontally */
-        margin-bottom: 0.5rem;   /* optional spacing below */
+        justify-content: center;
+        /* center horizontally */
+        margin-bottom: 0.5rem;
+        /* optional spacing below */
     }
 
     .filename-input {

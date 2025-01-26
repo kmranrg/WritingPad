@@ -294,8 +294,61 @@ document.addEventListener("click", (e) => {
   }
 });
 
+/*************************************************
+ * DRAG & DROP FUNCTIONALITY
+ *************************************************/
+// Listen for dragover to allow dropping
+editor.addEventListener("dragover", (e) => {
+  e.preventDefault(); // Necessary for drop to fire
+  editor.classList.add("drag-hover");
+});
 
-// ====== SERVICE WORKER (OPTIONAL) ====== //
+// Listen for dragleave if you want to remove highlight
+editor.addEventListener("dragleave", (e) => {
+  editor.classList.remove("drag-hover");
+});
+
+// Listen for drop event
+editor.addEventListener("drop", (e) => {
+  e.preventDefault(); 
+  editor.classList.remove("drag-hover");
+
+  // Access the dropped files
+  const files = e.dataTransfer.files;
+  if (files && files.length > 0) {
+    handleDroppedFile(files[0]); // Let's read the first dropped file
+  }
+});
+
+// A helper function to read the dropped file (plain text)
+function handleDroppedFile(file) {
+  // Optional: Check file type 
+  // (If you only want .txt, do something like:)
+  if (!file.name.endsWith(".txt")) {
+    alert("Please drop a .txt file!");
+    return;
+  }
+
+  // Use FileReader to read text
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    editor.value = event.target.result;
+    isModified = false;
+
+    // Set the filename in your input
+    currentFilename = file.name || "untitled.txt";
+    filenameInput.value = currentFilename;
+
+    // NOTE: Because the user dragged a file from their system,
+    // we do NOT have a File System Access API handle. 
+    // If your browser supports direct overwriting, the user 
+    // must confirm picking the file again or do "Save As."
+  };
+  reader.readAsText(file);
+}
+
+
+// ====== SERVICE WORKER ====== //
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("/service-worker.js")

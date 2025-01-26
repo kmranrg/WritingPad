@@ -322,13 +322,7 @@ editor.addEventListener("drop", (e) => {
 
 // A helper function to read the dropped file (plain text)
 function handleDroppedFile(file) {
-  // Optional: Check file type 
-  // (If you only want .txt, do something like:)
-  if (!file.name.endsWith(".txt")) {
-    alert("Please drop a .txt file!");
-    return;
-  }
-
+  
   // Use FileReader to read text
   const reader = new FileReader();
   reader.onload = (event) => {

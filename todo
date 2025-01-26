@@ -1,3 +1,6 @@
+Future Enhancements:
+    1. When we drag and drop file first time, it just remembers only that location. Next time, if we drag and drop another file, it still updates the previous file only.
+
 Jan 25, 2025:
     1. Footer implmentation for devInfo [done]
     2. Toolbar alignment for mobile devices [done]

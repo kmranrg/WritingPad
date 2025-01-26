@@ -53,6 +53,106 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+// =================== TAB INSERTION =================== //
+/**
+ * Add a tab space when the Tab key is pressed inside the editor.
+ */
+editor.addEventListener("keydown", (e) => {
+  if (e.key === "Tab") {
+    e.preventDefault(); // Prevent default tab behavior (focus change)
+
+    const start = editor.selectionStart;
+    const end = editor.selectionEnd;
+
+    // Insert a tab space at the cursor position
+    editor.value =
+      editor.value.substring(0, start) + "\t" + editor.value.substring(end);
+
+    // Move the cursor after the inserted tab
+    editor.selectionStart = editor.selectionEnd = start + 1;
+
+    // Mark as modified
+    isModified = true;
+  }
+});
+
+// =================== SAVE AS FUNCTIONALITY =================== //
+async function saveAsFile() {
+  if (supportsFileSystemAPI) {
+    try {
+      fileHandle = await window.showSaveFilePicker({
+        suggestedName: currentFilename || "untitled.txt",
+        types: [
+          {
+            description: "Text Files",
+            accept: { "text/plain": [".txt"] },
+          },
+        ],
+      });
+
+      const writable = await fileHandle.createWritable();
+      await writable.write(editor.value);
+      await writable.close();
+
+      currentFilename = fileHandle.name || "untitled.txt";
+      filenameInput.value = currentFilename;
+      isModified = false;
+
+      console.log("File saved as:", currentFilename);
+    } catch (error) {
+      console.error("Error during Save As operation:", error);
+    }
+  } else {
+    fallbackSaveAsFile();
+  }
+}
+
+function fallbackSaveAsFile() {
+  const newFilename = prompt(
+    "Enter the filename to save as:",
+    currentFilename || "untitled.txt"
+  );
+  if (!newFilename) return;
+
+  const content = editor.value;
+  const blob = new Blob([content], { type: "text/plain" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = newFilename;
+  document.body.appendChild(a);
+  a.style.display = "none";
+  a.click();
+
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+
+  currentFilename = newFilename;
+  filenameInput.value = currentFilename;
+  isModified = false;
+
+  console.log(`Fallback saved as: ${newFilename}`);
+}
+
+// =================== KEYBOARD SHORTCUTS =================== //
+/**
+ * Detect Ctrl+Shift+S and Ctrl+Alt+S for Save As functionality.
+ */
+document.addEventListener("keydown", (e) => {
+  const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+
+  // Handle Ctrl+Shift+S (primary shortcut)
+  if (isCtrlOrCmd && e.shiftKey && e.key.toLowerCase() === "s") {
+    e.preventDefault();
+    saveAsFile();
+  }
+
+  // Handle Ctrl+Alt+S (fallback for Edge)
+  if (isCtrlOrCmd && e.altKey && e.key.toLowerCase() === "s") {
+    e.preventDefault();
+    saveAsFile();
+  }
+});
+
 // =================== CORE FUNCTIONS =================== //
 
 /**

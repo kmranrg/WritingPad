@@ -1,5 +1,8 @@
-Future Enhancements:
+Jan 26, 2025:
     1. When we drag and drop file first time, it just remembers only that location. Next time, if we drag and drop another file, it still updates the previous file only. [done]
+    2. Optimized icons for iOS devices [done]
+    3. Tab feature implmentation [done]
+    4. "Save As" implementation [done]
 
 Jan 25, 2025:
     1. Footer implmentation for devInfo [done]

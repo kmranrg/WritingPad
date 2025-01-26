@@ -9,31 +9,26 @@ const developerBtn = document.getElementById("developerBtn");
 
 // Track unsaved changes
 let isModified = false;
-// Keep track of the "current" filename (fallback usage)
+// Keep track of the current file name shown in <input>
 let currentFilename = "untitled.txt";
 
-// ====== FILE SYSTEM ACCESS API DETECTION ====== //
-/** 
- * We check if the browser supports the new API.
- * If not, we default to the old approach.
- */
+// Check if browser supports File System Access API
 const supportsFileSystemAPI = (
-  "showOpenFilePicker" in window && 
+  "showOpenFilePicker" in window &&
   "showSaveFilePicker" in window
 );
 
-// A handle to the opened file (File System Access API)
+// A handle if user opened a file via File System Access
 let fileHandle = null;
 
+// =================== BASIC SETUP & EVENTS =================== //
 
-// ====== BASIC SETUP & EVENT LISTENERS ====== //
-
-// Mark document as modified whenever the user types
+// Mark the document as modified whenever user types in the editor
 editor.addEventListener("input", () => {
   isModified = true;
 });
 
-// Warn user about unsaved changes before closing
+// Warn user about unsaved changes if they close/refresh
 window.addEventListener("beforeunload", (e) => {
   if (isModified) {
     e.preventDefault();
@@ -41,7 +36,7 @@ window.addEventListener("beforeunload", (e) => {
   }
 });
 
-// Reflect changes in the filename input
+// Update `currentFilename` whenever user types in the filename <input>
 filenameInput.addEventListener("input", () => {
   currentFilename = filenameInput.value.trim() || "untitled.txt";
 });
@@ -50,60 +45,43 @@ filenameInput.addEventListener("input", () => {
 document.addEventListener("keydown", (e) => {
   if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey) {
     switch (e.key.toLowerCase()) {
-      case "n": // Ctrl+N
-        e.preventDefault();
-        newFile();
-        break;
-      case "o": // Ctrl+O
-        e.preventDefault();
-        openFile();
-        break;
-      case "s": // Ctrl+S
-        e.preventDefault();
-        saveFile();
-        break;
-      default:
-        break;
+      case "n": e.preventDefault(); newFile(); break;
+      case "o": e.preventDefault(); openFile(); break;
+      case "s": e.preventDefault(); saveFile(); break;
+      default: break;
     }
   }
 });
 
-
-// ====== CORE FUNCTIONS ====== //
+// =================== CORE FUNCTIONS =================== //
 
 /**
- * Create a new blank file (prompt user if unsaved).
+ * Create a new blank file. Prompt if unsaved changes exist.
  */
 function newFile() {
   if (isModified) {
-    const userConfirmed = confirm(
+    const confirmDiscard = confirm(
       "You have unsaved changes. Discard them and create a new file?"
     );
-    if (!userConfirmed) return;
+    if (!confirmDiscard) return;
   }
-  // Clear editor
+
   editor.value = "";
   isModified = false;
-  
-  // Reset filename to "untitled"
+  fileHandle = null;
+
   currentFilename = "untitled.txt";
   filenameInput.value = currentFilename;
-  
-  // Reset file handle (File System Access API)
-  fileHandle = null;
 }
 
 /**
- * Open a file:
- * - If File System Access API is supported => openFileSystemFile()
- * - Otherwise => fallbackOpenFile() with <input type="file" />
+ * Open a file. If File System Access API is supported, open that way.
+ * Otherwise, fallback to hidden <input type="file" />.
  */
 function openFile() {
   if (isModified) {
-    const userConfirmed = confirm(
-      "You have unsaved changes. Discard them and open a file?"
-    );
-    if (!userConfirmed) return;
+    const confirmDiscard = confirm("You have unsaved changes. Discard them and open a file?");
+    if (!confirmDiscard) return;
   }
 
   if (supportsFileSystemAPI) {
@@ -114,11 +92,8 @@ function openFile() {
 }
 
 /**
- * Save a file:
- * - If File System Access API is supported => 
- *     - If we already have a file handle, overwrite it
- *     - Otherwise, showSaveFilePicker
- * - Otherwise => fallback "download" approach
+ * Save a file. If File System Access API is supported and we have a handle, 
+ * overwrite it. Otherwise, do "Save As" or fallback download.
  */
 function saveFile() {
   if (supportsFileSystemAPI) {
@@ -132,11 +107,10 @@ function saveFile() {
   }
 }
 
-
-// ====== FILE SYSTEM ACCESS API APPROACH ====== //
+// =================== FILE SYSTEM ACCESS API APPROACH =================== //
 
 /**
- * 1) Prompt user to pick a file from their local system.
+ * 1) Prompt user to pick a file with showOpenFilePicker().
  */
 async function openFileSystemFile() {
   try {
@@ -149,24 +123,26 @@ async function openFileSystemFile() {
       ],
       multiple: false,
     });
-    
-    fileHandle = handle; // store for later overwriting
+
+    fileHandle = handle;
     const fileData = await fileHandle.getFile();
     const text = await fileData.text();
-    
+
+    // Load text into editor
     editor.value = text;
     isModified = false;
+
+    // Set filename from the actual file
     currentFilename = fileHandle.name || "untitled.txt";
     filenameInput.value = currentFilename;
-  } catch (error) {
-    console.error("Error opening file with File System Access API:", error);
-    // user may have canceled
+  } catch (err) {
+    console.error("Error opening file:", err);
+    // user might have canceled
   }
 }
 
 /**
- * 2) "Save As" with the File System Access API 
- *    (when user hasn't previously opened a file handle).
+ * 2) "Save As" logic if no file handle is open.
  */
 async function saveAsNewFileSystemFile() {
   try {
@@ -179,18 +155,17 @@ async function saveAsNewFileSystemFile() {
         },
       ],
     });
-    await overwriteFileSystemFile(); // now that we have a handle
-  } catch (error) {
-    console.error("Error in saveAsNewFileSystemFile:", error);
+    await overwriteFileSystemFile();
+  } catch (err) {
+    console.error("Error in saveAsNewFileSystemFile:", err);
   }
 }
 
 /**
- * 3) Overwrite existing file (File System Access API).
+ * 3) Overwrite an existing file handle in place.
  */
 async function overwriteFileSystemFile() {
   if (!fileHandle) {
-    // If we somehow have no handle, do Save As
     return saveAsNewFileSystemFile();
   }
   try {
@@ -199,25 +174,23 @@ async function overwriteFileSystemFile() {
     await writable.close();
     isModified = false;
     console.log("File overwritten successfully!");
-  } catch (error) {
-    console.error("Error overwriting file:", error);
+  } catch (err) {
+    console.error("Error overwriting file:", err);
   }
 }
 
-
-// ====== FALLBACK (OLD) APPROACH ====== //
+// =================== FALLBACK (OLD) APPROACH =================== //
 
 /**
- * Fallback open using <input type="file" /> 
+ * Fallback open with <input type="file" />
  */
 function fallbackOpenFile() {
-  fileInput.value = ""; // reset so user can pick the same file again
+  fileInput.value = "";
   fileInput.click();
 }
 
 /**
- * Handle file selection from the fallback approach 
- * (triggered by <input onchange="handleFileOpen(event)">).
+ * Called when user selects a file via fallback approach.
  */
 function handleFileOpen(event) {
   const file = event.target.files[0];
@@ -227,62 +200,79 @@ function handleFileOpen(event) {
   reader.onload = (e) => {
     editor.value = e.target.result;
     isModified = false;
+    fileHandle = null; // no handle in fallback mode
+
     currentFilename = file.name || "untitled.txt";
     filenameInput.value = currentFilename;
-    // In fallback mode, we do NOT have a handle to the real file
-    fileHandle = null;
   };
   reader.readAsText(file);
 }
 
 /**
- * Fallback "save" using Blob + <a> approach (always new file)
+ * Fallback save: download a new file with a Blob.
  */
 function fallbackSaveFile() {
-  const fileNameToSave = filenameInput.value.trim() || "untitled.txt";
+  const chosenName = filenameInput.value.trim() || "untitled.txt";
   const content = editor.value;
 
   const blob = new Blob([content], { type: "text/plain" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = fileNameToSave;
-  document.body.appendChild(a);
-  a.style.display = "none";
-  a.click();
-
-  document.body.removeChild(a);
-  URL.revokeObjectURL(a.href);
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = chosenName;
+  document.body.appendChild(link);
+  link.style.display = "none";
+  link.click();
+  
+  document.body.removeChild(link);
+  URL.revokeObjectURL(link.href);
 
   isModified = false;
-  console.log(`Fallback: file saved as "${fileNameToSave}"`);
+  console.log(`Fallback saved as "${chosenName}"`);
 }
 
+// =================== DRAG & DROP =================== //
+editor.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  editor.classList.add("drag-hover");
+});
+editor.addEventListener("dragleave", () => {
+  editor.classList.remove("drag-hover");
+});
+editor.addEventListener("drop", (e) => {
+  e.preventDefault();
+  editor.classList.remove("drag-hover");
 
-// ====== DEVELOPER INFO & FOOTER ====== //
+  const files = e.dataTransfer.files;
+  if (files && files.length > 0) {
+    handleDroppedFile(files[0]);
+  }
+});
 
 /**
- * Show the footer message for a few seconds when the developer button is clicked.
+ * Read a dragged file, set text in editor, reset old handle, 
+ * and set the new file's name in <input>.
  */
-function showDeveloperInfo() {
-  // If you still use the old popover approach, you can toggle it here too:
-  // if (devPopover.style.display === "block") {
-  //   devPopover.style.display = "none";
-  // } else {
-  //   devPopover.style.display = "block";
-  // }
+function handleDroppedFile(file) {
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    editor.value = event.target.result;
+    isModified = false;
+    fileHandle = null; // no direct handle for drag & drop
 
-  const footerMessage = document.getElementById("footerMessage");
-
-  // Show the footer message
-  footerMessage.classList.add("show");
-
-  // Automatically hide it after 5 seconds
-  setTimeout(() => {
-    footerMessage.classList.remove("show");
-  }, 5000);
+    currentFilename = file.name || "untitled.txt";
+    filenameInput.value = currentFilename;
+  };
+  reader.readAsText(file);
 }
 
-// Optionally close the popover if clicking outside
+// =================== DEVELOPER INFO & FOOTER =================== //
+function showDeveloperInfo() {
+  const footerMessage = document.getElementById("footerMessage");
+  footerMessage.classList.add("show");
+  setTimeout(() => footerMessage.classList.remove("show"), 5000);
+}
+
+// If using a popover, close if user clicks outside it
 document.addEventListener("click", (e) => {
   if (
     e.target !== developerBtn &&
@@ -294,61 +284,10 @@ document.addEventListener("click", (e) => {
   }
 });
 
-/*************************************************
- * DRAG & DROP FUNCTIONALITY
- *************************************************/
-// Listen for dragover to allow dropping
-editor.addEventListener("dragover", (e) => {
-  e.preventDefault(); // Necessary for drop to fire
-  editor.classList.add("drag-hover");
-});
-
-// Listen for dragleave if you want to remove highlight
-editor.addEventListener("dragleave", (e) => {
-  editor.classList.remove("drag-hover");
-});
-
-// Listen for drop event
-editor.addEventListener("drop", (e) => {
-  e.preventDefault(); 
-  editor.classList.remove("drag-hover");
-
-  // Access the dropped files
-  const files = e.dataTransfer.files;
-  if (files && files.length > 0) {
-    handleDroppedFile(files[0]); // Let's read the first dropped file
-  }
-});
-
-// A helper function to read the dropped file (plain text)
-function handleDroppedFile(file) {
-  
-  // Use FileReader to read text
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    editor.value = event.target.result;
-    isModified = false;
-
-    // Set the filename in your input
-    currentFilename = file.name || "untitled.txt";
-    filenameInput.value = currentFilename;
-
-    // NOTE: Because the user dragged a file from their system,
-    // we do NOT have a File System Access API handle. 
-    // If your browser supports direct overwriting, the user 
-    // must confirm picking the file again or do "Save As."
-    fileHandle = null;
-  };
-  reader.readAsText(file);
-}
-
-
-// ====== SERVICE WORKER ====== //
+// Optional: Register service worker
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("/service-worker.js")
     .then(() => console.log("Service Worker registered successfully."))
-    .catch((error) =>
-      console.error("Service Worker registration failed:", error)
-    );
+    .catch((err) => console.error("Service Worker registration failed:", err));
 }

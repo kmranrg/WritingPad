@@ -14,6 +14,7 @@
 - 🖋️ **Basic File Management**:
   - Create new files.
   - Open `.txt` files from your local system.
+  - Or just simply drag and drop files (`.txt` preferred)
   - Save text files directly to your device.
 - 🌟 **Keyboard Shortcuts**:
   - **Ctrl+N**: Create a new file.

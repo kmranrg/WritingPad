@@ -337,6 +337,7 @@ function handleDroppedFile(file) {
     // we do NOT have a File System Access API handle. 
     // If your browser supports direct overwriting, the user 
     // must confirm picking the file again or do "Save As."
+    fileHandle = null;
   };
   reader.readAsText(file);
 }

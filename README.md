@@ -12,15 +12,17 @@
 
 - ✏️ **Notebook-Themed Interface**: Styled like a classic ruled notebook for a familiar writing experience.
 - 🖋️ **Basic File Management**:
-  - Create new files (or press Ctrl+N).
-  - Open `.txt` files from your local system (or press Ctrl+O).
+  - Create new files.
+  - Open `.txt` files from your local system.
   - Simply drag and drop files (`.txt` preferred).
-  - Save text files directly to your device (or press Ctrl+S).
-  - Do "Save As" by pressing Ctrl+Shift+S (for most browsers) or Ctrl+Alt+S (for Microsoft Edge browser).
+  - Save text files directly to your device.
+  - Do "Save As" for saving your work with different file name.
 - 🌟 **Keyboard Shortcuts**:
   - **Ctrl+N**: Create a new file.
   - **Ctrl+O**: Open an existing file.
   - **Ctrl+S**: Save your work.
+  - **Ctrl+Shift+S**: Do "Save As" in most browsers.
+  - **Ctrl+Alt+S**: Do "Save As" in most Microsoft Edge Browser.
 - 🔒 **No Data Saved**: Fully client-side. Your data stays on your device.
 
 ---
